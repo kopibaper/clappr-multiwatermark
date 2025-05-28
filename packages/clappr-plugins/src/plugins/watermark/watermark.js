@@ -75,6 +75,14 @@ export default class WaterMarkPlugin extends UIContainerPlugin {
       }
       
       watermarkContainer.html(this.template(templateOptions))
+      
+      // Add click handler for close button if it's a bottom-center watermark
+      if (watermark.position === 'bottom-center') {
+        watermarkContainer.find('.watermark-close-btn').on('click', () => {
+          watermarkContainer.remove()
+        })
+      }
+      
       this.$el.append(watermarkContainer)
     })
     
