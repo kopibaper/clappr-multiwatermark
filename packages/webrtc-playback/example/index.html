@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>WebRTC Playback Example</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 20px;
+      font-family: Arial, sans-serif;
+    }
+    #player {
+      width: 640px;
+      height: 360px;
+      margin: 0 auto;
+    }
+  </style>
+</head>
+<body>
+  <div id="player"></div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@clappr/core@latest/dist/clappr-core.js"></script>
+  <script src="../dist/webrtc-playback.js"></script>
+  <script>
+    var player = new Clappr.Player({
+      source: 'https://your-webrtc-stream-url.sdp',
+      parentId: '#player',
+      plugins: [WebRTCPlayback],
+      width: '100%',
+      height: '100%'
+    });
+  </script>
+</body>
+</html> 

@@ -1,0 +1,21 @@
+.webrtc-playback {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  background-color: #000;
+
+  .webrtc-playback-container {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .webrtc-video {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+  }
+} 
