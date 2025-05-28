@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html>
+
 <head>
   <title>Clappr Multiple Watermark Test</title>
   <style>
@@ -10,6 +11,7 @@
     }
   </style>
 </head>
+
 <body>
   <h2>Multiple Watermarks Test</h2>
   <div id="player-multiple" class="player-container"></div>
@@ -18,14 +20,19 @@
   <script type="text/javascript" src="packages/clappr-plugins/dist/clappr-plugins.js"></script>
   <script>
     // Test video URL
-    const videoUrl = 'https://bcovlive-a.akamaihd.net/r2d2c4ca5bf57456fb1d16255c1a535c8/eu-west-1/6058004203001/playlist.m3u8';
-    // const videoUrl = 'https://no1stream.com/no1stream/live156.sdp?wsSecret=43327301068f2b0d4cda0878469ffc6a&wsTime=1748438505&site=';
+    // const videoUrl = 'https://bcovlive-a.akamaihd.net/r2d2c4ca5bf57456fb1d16255c1a535c8/eu-west-1/6058004203001/playlist.m3u8';
+    const videoUrl = 'https://no1stream.com/no1stream/live156.sdp?wsSecret=43327301068f2b0d4cda0878469ffc6a&wsTime=1748438505&site=';
 
     // Multiple watermarks player
     const playerMultiple = new Clappr.Player({
       source: videoUrl,
+
+      mimeType: 'application/sdp',
       parentId: '#player-multiple',
       autoplay: true,
+      plugins: [
+       
+      ],
       watermark: [
         // {
         //   imageUrl: 'https://clappr.io/img/clappr.png',
@@ -46,4 +53,5 @@
     });
   </script>
 </body>
+
 </html>
