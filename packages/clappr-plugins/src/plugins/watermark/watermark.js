@@ -14,6 +14,8 @@ export default class WaterMarkPlugin extends UIContainerPlugin {
 
   constructor(container) {
     super(container)
+    this.$el = $('<div class="clappr-watermark"></div>')
+    this.bottomWatermarkTimer = null
     this.configure()
   }
 
@@ -37,18 +39,81 @@ export default class WaterMarkPlugin extends UIContainerPlugin {
     
     if (this.watermarks.length > 0) {
       this.render()
+      this.$el.show()
+      this.startBottomWatermarkTimer()
     } else {
       this.$el.remove()
     }
   }
 
   onPlay() {
-    if (!this.hidden)
-      this.$el.show()
+    console.log('Play event triggered')
+    if (!this.hidden) {
+      this.$el.css('display', 'block')
+      console.log('Watermarks shown on play')
+    }
   }
 
   onStop() {
-    this.$el.hide()
+    console.log('Stop event triggered')
+    this.$el.css('display', 'none')
+    this.stopBottomWatermarkTimer()
+    console.log('Watermarks hidden on stop')
+  }
+
+  startBottomWatermarkTimer() {
+    console.log('Starting bottom watermark timer')
+    this.stopBottomWatermarkTimer()
+    
+    const bottomWatermarks = this.$el.find('.watermark-bottom_center')
+    console.log('Found bottom watermarks:', bottomWatermarks.length)
+    if (bottomWatermarks.length === 0) return
+
+    // Add transition style
+    bottomWatermarks.css({
+      'transition': 'opacity 0.5s ease-in-out',
+      'opacity': '1'
+    })
+
+    let isVisible = true
+    console.log('Initial state: watermarks visible')
+
+    const toggleVisibility = () => {
+      console.log('Toggle called, current visibility:', isVisible)
+      if (isVisible) {
+        console.log('Fading out watermarks')
+        bottomWatermarks.css('opacity', '0')
+        setTimeout(() => {
+          isVisible = false
+          console.log('Watermarks faded out')
+        }, 500)
+      } else {
+        console.log('Fading in watermarks')
+        bottomWatermarks.css('opacity', '1')
+        setTimeout(() => {
+          isVisible = true
+          console.log('Watermarks faded in')
+        }, 500)
+      }
+    }
+
+    // Initial delay before starting the toggle cycle
+    console.log('Setting initial delay of 5 seconds')
+    setTimeout(() => {
+      console.log('Initial delay complete, starting toggle cycle')
+      toggleVisibility()
+      this.bottomWatermarkTimer = setInterval(toggleVisibility, 5000)
+      console.log('Toggle interval set for every 5 seconds')
+    }, 60000)
+  }
+
+  stopBottomWatermarkTimer() {
+    console.log('Stopping bottom watermark timer')
+    if (this.bottomWatermarkTimer) {
+      clearInterval(this.bottomWatermarkTimer)
+      this.bottomWatermarkTimer = null
+      console.log('Timer cleared')
+    }
   }
 
   render() {

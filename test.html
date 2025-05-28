@@ -18,12 +18,14 @@
   <script type="text/javascript" src="packages/clappr-plugins/dist/clappr-plugins.js"></script>
   <script>
     // Test video URL
-    const videoUrl = 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4';
+    const videoUrl = 'https://bcovlive-a.akamaihd.net/r2d2c4ca5bf57456fb1d16255c1a535c8/eu-west-1/6058004203001/playlist.m3u8';
+    // const videoUrl = 'https://no1stream.com/no1stream/live156.sdp?wsSecret=43327301068f2b0d4cda0878469ffc6a&wsTime=1748438505&site=';
 
     // Multiple watermarks player
     const playerMultiple = new Clappr.Player({
       source: videoUrl,
       parentId: '#player-multiple',
+      autoplay: true,
       watermark: [
         // {
         //   imageUrl: 'https://clappr.io/img/clappr.png',

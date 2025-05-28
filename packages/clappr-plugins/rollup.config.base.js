@@ -42,6 +42,7 @@ const baseConfig = {
       CLAPPR_CORE_VERSION: JSON.stringify(clapprCoreVersion),
       preventAssignment: false,
     }),
+    
     commonjs(),
     nodeResolve(),
     namedDirectory(),
