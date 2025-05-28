@@ -17,7 +17,7 @@ const dev = !!process.env.DEV
 const analyzeBundle = !!process.env.ANALYZE_BUNDLE
 const minimize = !!process.env.MINIMIZE
 
-const servePluginOptions = { contentBase: ['dist', 'public'], host: '0.0.0.0', port: '8080' }
+const servePluginOptions = { contentBase: ['dist', 'public'], host: '0.0.0.0', port: '8081' }
 const livereloadPluginOptions = { watch: ['dist', 'public'] }
 const visualizePluginOptions = { open: true }
 

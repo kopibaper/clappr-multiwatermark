@@ -24,13 +24,22 @@ export default class WaterMarkPlugin extends UIContainerPlugin {
   }
 
   configure() {
-    this.position = this.options.position || 'bottom-right'
-    if (this.options.watermark) {
-      this.imageUrl = this.options.watermark
-      this.imageLink = this.options.watermarkLink
+    // Check for watermarks configuration at root level
+    if (this.options.watermark && Array.isArray(this.options.watermark)) {
+      this.watermarks = this.options.watermark.map(wm => ({
+        imageUrl: wm.imageUrl || '',
+        imageLink: wm.imageLink || '',
+        position: wm.position || 'top-right'
+      }))
+    } else {
+      this.watermarks = []
+    }
+    
+    if (this.watermarks.length > 0) {
       this.render()
-    } else { this.$el.remove() }
-
+    } else {
+      this.$el.remove()
+    }
   }
 
   onPlay() {
@@ -45,8 +54,30 @@ export default class WaterMarkPlugin extends UIContainerPlugin {
   render() {
     this.$el.hide()
     const style = Styler.getStyleFor(watermarkStyle, { baseUrl: this.options.baseUrl })
-    const templateOptions = { position: this.position, imageUrl: this.imageUrl, imageLink: this.imageLink }
-    this.$el.html(this.template(templateOptions))
+    
+    // Clear existing watermarks
+    this.$el.empty()
+    
+    // Create a container for each watermark
+    this.watermarks.forEach(watermark => {
+      const watermarkContainer = $('<div class="clappr-watermark-container"></div>')
+      const templateOptions = {
+        position: watermark.position,
+        imageUrl: watermark.imageUrl,
+        imageLink: watermark.imageLink,
+        className: `watermark-${watermark.position.replace('-', '_')}`
+      }
+      
+      // Ensure position is one of the valid options
+      if (!['top-left', 'top-right', 'bottom-center'].includes(watermark.position)) {
+        templateOptions.position = 'top-right'
+        templateOptions.className = 'watermark-top_right'
+      }
+      
+      watermarkContainer.html(this.template(templateOptions))
+      this.$el.append(watermarkContainer)
+    })
+    
     this.$el.append(style[0])
     this.container.$el.append(this.$el)
     return this

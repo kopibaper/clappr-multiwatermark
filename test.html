@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Clappr Multiple Watermark Test</title>
+  <style>
+    .player-container {
+      width: 640px;
+      height: 360px;
+      margin: 20px auto;
+    }
+  </style>
+</head>
+<body>
+  <h2>Multiple Watermarks Test</h2>
+  <div id="player-multiple" class="player-container"></div>
+
+  <script type="text/javascript" src="packages/player/dist/clappr.js"></script>
+  <script type="text/javascript" src="packages/clappr-plugins/dist/clappr-plugins.js"></script>
+  <script>
+    // Test video URL
+    const videoUrl = 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4';
+
+    // Multiple watermarks player
+    const playerMultiple = new Clappr.Player({
+      source: videoUrl,
+      parentId: '#player-multiple',
+      watermark: [
+        {
+          imageUrl: 'https://clappr.io/img/clappr.png',
+          imageLink: 'https://github.com/clappr/clappr',
+          position: 'top-left'
+        },
+        {
+          imageUrl: 'https://clappr.io/img/clappr.png',
+          imageLink: 'https://github.com/clappr/clappr',
+          position: 'top-right'
+        },
+        {
+          imageUrl: 'https://cdn1.jskhdkajskjsad.xyz/wp-content/uploads/2025/03/sobattt.gif',
+          imageLink: 'https://github.com/clappr/clappr',
+          position: 'bottom-center'
+        }
+      ]
+    });
+  </script>
+</body>
+</html>

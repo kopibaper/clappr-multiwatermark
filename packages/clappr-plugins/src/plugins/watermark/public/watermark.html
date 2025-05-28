@@ -1,9 +1,17 @@
-<div class="clappr-watermark" data-watermark data-watermark-<%=position %>>
-<% if(typeof imageLink !== 'undefined') { %>
-<a target=_blank href="<%= imageLink %>">
+<% if (position === 'top-left') { %>
+<div class="clappr-watermark <%= className %>" data-watermark data-watermark-top-left>
+<% } else if (position === 'top-right') { %>
+<div class="clappr-watermark <%= className %>" data-watermark data-watermark-top-right>
+<% } else if (position === 'bottom-center') { %>
+<div class="clappr-watermark <%= className %>" data-watermark data-watermark-bottom-center>
+<% } else { %>
+<div class="clappr-watermark <%= className %>" data-watermark data-watermark-top-right>
 <% } %>
-<img src="<%= imageUrl %>">
-<% if(typeof imageLink !== 'undefined') { %>
+<% if(typeof imageLink !== 'undefined' && imageLink) { %>
+<a target="_blank" href="<%= imageLink %>">
+<% } %>
+<img src="<%= typeof imageUrl === 'string' ? imageUrl : '' %>">
+<% if(typeof imageLink !== 'undefined' && imageLink) { %>
 </a>
 <% } %>
 </div>
