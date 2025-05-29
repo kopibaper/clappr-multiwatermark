@@ -4,30 +4,83 @@
 <head>
   <title>Clappr Multiple Watermark Test</title>
   <style>
+    body,
+    html {
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+    }
+
     .player-container {
-      width: 640px;
-      height: 360px;
-      margin: 20px auto;
+      width: 100%;
+      height: 100vh;
+      background: #000;
+    }
+
+    .webrtc-playback {
+      width: 100%;
+      height: 100%;
+    }
+
+    .webrtc-playback video {
+      width: 100%;
+      height: 100%;
+    }
+
+    /* Control middle play button size */
+    .clappr-container .clappr-play-button {
+      width: 60px !important;
+      height: 60px !important;
+    }
+
+    .clappr-container .clappr-play-button svg {
+      width: 30px !important;
+      height: 30px !important;
     }
   </style>
 </head>
 
 <body>
-  <h2>Multiple Watermarks Test</h2>
+
   <div id="player-multiple" class="player-container"></div>
 
+  <!-- Use UMD version of Clappr -->
   <script type="text/javascript" src="packages/player/dist/clappr.js"></script>
   <script type="text/javascript" src="packages/webrtc-playback/dist/webrtc-playback.js"></script>
+  <script type="text/javascript" src="clappr.ads.js"></script>
   <script>
     // Test video URL
-    let videoUrl = 'https://no1stream.com/no1stream/live200.sdp?wsSecret=d6c32019911c74bc7d415806758afa95&wsTime=1748460937&site=';
+    let videoUrl = 'https://demo.unified-streaming.com/k8s/features/stable/video/tears-of-steel/tears-of-steel.ism/.m3u8';
+    videoUrl = 'https://no1stream.com/no1stream/live226.sdp?wsSecret=1bc4949f2bdb39c6ee52015365fc17ca&wsTime=1748494822&site=';
+
+
+    // Check Clappr version
+    console.log('Clappr version:', Clappr.version);
+
+    // Register the WebRTC playback plugin
+    Clappr.Playback.register(WebRTCPlayback);
+    function detectMimeType(url) {
+      if (url.includes('.m3u8')) {
+        return 'application/x-mpegURL';
+      }
+      if (url.includes('.sdp')) {
+        return 'application/sdp';
+      } else {
+        return 'application/sdp';
+      }
+    }
+    const mime = detectMimeType(videoUrl);
 
     // Multiple watermarks player
     const playerMultiple = new Clappr.Player({
       source: videoUrl,
-      mimeType: 'application/x-webrtc',
+      mimeType: mime,
       parentId: '#player-multiple',
       autoplay: true,
+      muted: true,
+      poster: 'https://cdn1.jskhdkajskjsad.xyz/wp-content/uploads/2025/05/ng3.gif',
       watermark: [
         {
           imageUrl: 'https://i.ibb.co/kgGnGNQy/Screenshot-7.png',
@@ -40,7 +93,35 @@
           position: 'bottom-center'
         }
       ],
-      plugins: [WebRTCPlayback],
+      plugins: [WebRTCPlayback, ClapprAds],
+      ads: {
+        preRoll: {
+          enabled: false,
+          src: 'ads.mp4',
+          skip: true,
+          timeout: 5,
+          link: 'http://example.com/ad-destination',
+          autoskip: 10
+        },
+        midRoll: {
+          enabled: true,
+          src: 'ads.mp4',
+          interval:1,
+          skip: true,
+          timeout: 5,
+          autoskip: 15
+        },
+        postRoll: {
+          enabled: false,
+          src: 'ads.mp4',
+          link: 'http://example.com/ad-destination',
+          autoskip: 8
+        },
+        text: {
+          wait: 'Wait % seconds...',
+          skip: 'Skip >'
+        }
+      },
       width: '100%',
       height: '100%',
       webrtc: {
@@ -48,8 +129,57 @@
           offerToReceiveAudio: true,
           offerToReceiveVideo: true
         }
+      },
+      mediaControl: {
+        autoHide: true,
+        autoHideTime: 3000,
+        buttons: ['playpause', 'volume', 'fullscreen']
       }
     });
+
+    // Add event listeners for debugging
+    playerMultiple.on(Clappr.Events.PLAYER_PLAY, () => {
+      console.log('Player play event fired');
+    });
+
+    playerMultiple.on(Clappr.Events.PLAYER_ERROR, (error) => {
+      playerMultiple.play();
+    });
+
+    playerMultiple.on(Clappr.Events.PLAYER_STOP, () => {
+      // console.log('Player stop event fired');
+      playerMultiple.play();
+    });
+
+    playerMultiple.on(Clappr.Events.PLAYER_READY, () => {
+      console.log('Player ready event fired');
+      // Force play when ready
+      playerMultiple.play();
+    });
+
+    playerMultiple.on(Clappr.Events.PLAYER_PLAYBACK_STATE_CHANGE, (state) => {
+      console.log('Playback state changed:', state);
+    });
+
+    playerMultiple.on(Clappr.Events.PLAYER_PLAYBACK_READY, () => {
+      console.log('Playback ready event fired');
+    });
+
+    // Check if WebRTC is supported
+    if (!window.RTCPeerConnection) {
+      console.error('WebRTC is not supported in this browser');
+    } else {
+      console.log('WebRTC is supported');
+    }
+
+    // Check if the video element is created
+    setTimeout(() => {
+      const videoElement = document.querySelector('.webrtc-playback video');
+      console.log('Video element found:', !!videoElement);
+      if (videoElement) {
+        console.log('Video element dimensions:', videoElement.offsetWidth, 'x', videoElement.offsetHeight);
+      }
+    }, 1000);
   </script>
 </body>
 

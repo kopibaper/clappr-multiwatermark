@@ -9,6 +9,7 @@
     "dev": "lerna run start --scope=@clappr/player",
     "lint": "lerna run lint --scope=@clappr/{core,plugins}",
     "release": "lerna publish --include-merged-tags --yes",
+    "build": "lerna run release",
     "prepare": "husky",
     "test": "lerna run test --scope=@clappr/core"
   },
