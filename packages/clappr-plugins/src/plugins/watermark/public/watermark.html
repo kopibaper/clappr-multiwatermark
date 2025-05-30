@@ -12,9 +12,7 @@
 <% } %>
 <div class="watermark-image-container">
   <img src="<%= typeof imageUrl === 'string' ? imageUrl : '' %>">
-  <% if (position === 'bottom-center') { %>
-  <button class="watermark-close-btn">&times;</button>
-  <% } %>
+  
 </div>
 <% if(typeof imageLink !== 'undefined' && imageLink) { %>
 </a>

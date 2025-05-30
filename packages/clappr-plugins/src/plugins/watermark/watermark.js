@@ -86,25 +86,27 @@ export default class WaterMarkPlugin extends UIContainerPlugin {
         setTimeout(() => {
           isVisible = false
           console.log('Watermarks faded out')
-        }, 500)
-      } else {
-        console.log('Fading in watermarks')
-        bottomWatermarks.css('opacity', '1')
-        setTimeout(() => {
-          isVisible = true
-          console.log('Watermarks faded in')
+          // Schedule next show after 4 minutes
+          setTimeout(() => {
+            console.log('Fading in watermarks')
+            bottomWatermarks.css('opacity', '1')
+            setTimeout(() => {
+              isVisible = true
+              console.log('Watermarks faded in')
+              // Schedule next hide after 15 seconds
+              setTimeout(() => toggleVisibility(), 15000)
+            }, 500)
+          }, 240000) // 4 minutes = 240000ms
         }, 500)
       }
     }
 
     // Initial delay before starting the toggle cycle
-    console.log('Setting initial delay of 5 seconds')
+    console.log('Setting initial delay of 20 seconds')
     setTimeout(() => {
       console.log('Initial delay complete, starting toggle cycle')
       toggleVisibility()
-      this.bottomWatermarkTimer = setInterval(toggleVisibility, 5000)
-      console.log('Toggle interval set for every 5 seconds')
-    }, 60000)
+    }, 200000)
   }
 
   stopBottomWatermarkTimer() {
