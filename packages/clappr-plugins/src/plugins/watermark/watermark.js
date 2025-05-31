@@ -19,6 +19,13 @@ export default class WaterMarkPlugin extends UIContainerPlugin {
     this.configure()
   }
 
+  getTimestamp() {
+    const now = new Date()
+    const hours = now.getHours().toString().padStart(2, '0')
+    const minutes = now.getMinutes().toString().padStart(2, '0')
+    return `[${hours}:${minutes}]`
+  }
+
   bindEvents() {
     this.listenTo(this.container, Events.CONTAINER_PLAY, this.onPlay)
     this.listenTo(this.container, Events.CONTAINER_STOP, this.onStop)
@@ -37,6 +44,13 @@ export default class WaterMarkPlugin extends UIContainerPlugin {
       this.watermarks = []
     }
     
+    // Set default timeout duration (4 minutes in milliseconds)
+    this.bottomWatermarkTimeout = (this.options.watermarkTimeout || 240000)
+    // Set default visibility duration (15 seconds in milliseconds)
+    this.bottomWatermarkVisibility = (this.options.watermarkVisibility || 15000)
+    console.log(`${this.getTimestamp()} Bottom watermark timeout set to ${this.bottomWatermarkTimeout/1000} seconds`)
+    console.log(`${this.getTimestamp()} Bottom watermark visibility delay set to ${this.bottomWatermarkVisibility/1000} seconds`)
+    
     if (this.watermarks.length > 0) {
       this.render()
       this.$el.show()
@@ -47,26 +61,26 @@ export default class WaterMarkPlugin extends UIContainerPlugin {
   }
 
   onPlay() {
-    console.log('Play event triggered')
+    console.log(`${this.getTimestamp()} Play event triggered`)
     if (!this.hidden) {
       this.$el.css('display', 'block')
-      console.log('Watermarks shown on play')
+      console.log(`${this.getTimestamp()} Watermarks shown on play`)
     }
   }
 
   onStop() {
-    console.log('Stop event triggered')
+    console.log(`${this.getTimestamp()} Stop event triggered`)
     this.$el.css('display', 'none')
     this.stopBottomWatermarkTimer()
-    console.log('Watermarks hidden on stop')
+    console.log(`${this.getTimestamp()} Watermarks hidden on stop`)
   }
 
   startBottomWatermarkTimer() {
-    console.log('Starting bottom watermark timer')
+    console.log(`${this.getTimestamp()} Starting bottom watermark timer`)
     this.stopBottomWatermarkTimer()
     
     const bottomWatermarks = this.$el.find('.watermark-bottom_center')
-    console.log('Found bottom watermarks:', bottomWatermarks.length)
+    console.log(`${this.getTimestamp()} Found bottom watermarks:`, bottomWatermarks.length)
     if (bottomWatermarks.length === 0) return
 
     // Add transition style
@@ -76,45 +90,45 @@ export default class WaterMarkPlugin extends UIContainerPlugin {
     })
 
     let isVisible = true
-    console.log('Initial state: watermarks visible')
+    console.log(`${this.getTimestamp()} Initial state: watermarks visible`)
 
     const toggleVisibility = () => {
-      console.log('Toggle called, current visibility:', isVisible)
+      console.log(`${this.getTimestamp()} Toggle called, current visibility:`, isVisible)
       if (isVisible) {
-        console.log('Fading out watermarks')
+        console.log(`${this.getTimestamp()} Fading out watermarks`)
         bottomWatermarks.css('opacity', '0')
         setTimeout(() => {
           isVisible = false
-          console.log('Watermarks faded out')
-          // Schedule next show after 4 minutes
+          console.log(`${this.getTimestamp()} Watermarks faded out`)
+          // Schedule next show after configured timeout
           setTimeout(() => {
-            console.log('Fading in watermarks')
+            console.log(`${this.getTimestamp()} Fading in watermarks`)
             bottomWatermarks.css('opacity', '1')
             setTimeout(() => {
               isVisible = true
-              console.log('Watermarks faded in')
-              // Schedule next hide after 15 seconds
-              setTimeout(() => toggleVisibility(), 15000)
+              console.log(`${this.getTimestamp()} Watermarks faded in`)
+              // Schedule next hide after configured visibility duration
+              setTimeout(() => toggleVisibility(), this.bottomWatermarkVisibility)
             }, 500)
-          }, 240000) // 4 minutes = 240000ms
+          }, this.bottomWatermarkTimeout)
         }, 500)
       }
     }
 
     // Initial delay before starting the toggle cycle
-    console.log('Setting initial delay of 20 seconds')
+    console.log(`${this.getTimestamp()} Setting initial delay of ${this.bottomWatermarkVisibility/1000} seconds`)
     setTimeout(() => {
-      console.log('Initial delay complete, starting toggle cycle')
+      console.log(`${this.getTimestamp()} Initial delay complete, starting toggle cycle`)
       toggleVisibility()
-    }, 200000)
+    }, this.bottomWatermarkVisibility)
   }
 
   stopBottomWatermarkTimer() {
-    console.log('Stopping bottom watermark timer')
+    console.log(`${this.getTimestamp()} Stopping bottom watermark timer`)
     if (this.bottomWatermarkTimer) {
       clearInterval(this.bottomWatermarkTimer)
       this.bottomWatermarkTimer = null
-      console.log('Timer cleared')
+      console.log(`${this.getTimestamp()} Timer cleared`)
     }
   }
 
